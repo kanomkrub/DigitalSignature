@@ -12,23 +12,49 @@ namespace DigitalSignatureService.Core
 {
     public class TemplateFileStore : ContentManager
     {
-        private string repository;
+        private string templateRepository= Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+@"\TechSphere\DigitalSignature\Templates\";
         private string encryptionKey;
-        public TemplateFileStore(NameValueCollection parameter)
+        public TemplateFileStore()
         {
-            //repository = parameter["repository"];
-            //encryptionKey = parameter["password"];
+            if (!Directory.Exists(templateRepository)) Directory.CreateDirectory(templateRepository);
         }
-        internal override string CreateTemplate(string name, string description, List<PDFField> pdfFields = null)
+        public override void SaveTemplate(DigitalSignatureTemplate template)
         {
-            var path = "";
-            var template = new DigitalSignatureTemplate() { name = name, description = description, pdfFields = pdfFields };
-
+            var path = $"{templateRepository}{template.id}.json";
             var json = JsonConvert.SerializeObject(template);
             var bytes = Encoding.UTF8.GetBytes(json);
             File.WriteAllBytes(path, bytes);
+        }
+        public override void DeleteTemplate(string id)
+        {
+            var path = $"{templateRepository}{id}.json";
+            if (File.Exists(path))
+                File.Delete(path);
+        }
 
-            return template.id;
+        public override DigitalSignatureTemplate GetTemplate(string id)
+        {
+            var path = $"{templateRepository}{id}.json";
+            if (!File.Exists(path)) throw new KeyNotFoundException($"template {id} not found.");
+            var content = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<DigitalSignatureTemplate>(content, new Converter.PDFFieldConverter());
+        }
+
+        public override IEnumerable<DigitalSignatureTemplate> GetTemplates()
+        {
+            foreach (var file in Directory.GetFiles(templateRepository))
+            {
+                var content = File.ReadAllText(file);
+                yield return JsonConvert.DeserializeObject<DigitalSignatureTemplate>(content, new Converter.PDFFieldConverter());
+            }
+        }
+
+        public override IEnumerable<string> GetTemplateIds()
+        {
+            foreach (var file in Directory.GetFiles(templateRepository))
+            {
+                yield return Path.GetFileNameWithoutExtension(file);
+            }
         }
     }
 }

@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\CertificateUtilityTests.cs" />
+    <Compile Include="Core\ContentManagerTests.cs" />
     <Compile Include="PDFUtilityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

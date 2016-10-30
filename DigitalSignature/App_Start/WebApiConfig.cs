@@ -12,6 +12,10 @@ namespace DigitalSignatureService
             // Web API configuration and services
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{action}", new { action = RouteParameter.Optional });
+
+
+            //config.Formatters.JsonFormatter.SerializerSettings.Converters.Add
+            //    (new Core.Converter.PDFFieldConverter());
             // Web API routes
             //config.MapHttpAttributeRoutes();
 

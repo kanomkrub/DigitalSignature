@@ -84,6 +84,12 @@ namespace DigitalSignatureService.Tests
         [TestMethod()]
         public void TextWithSignatureTest()
         {
+            List<PDFField> list = GetTestList();
+            PDFUtility.AddPDFFields(@"D:\temp\testSignatureService\BG.pdf", @"D:\temp\testSignatureService\BG_Out_text_signature.pdf", list);
+        }
+
+        public static List<PDFField> GetTestList()
+        {
             var list = new List<PDFField>();
             list.Add(new PdfTextField()
             {
@@ -96,7 +102,7 @@ namespace DigitalSignatureService.Tests
                 color = "#FF00008B",
                 showborder = true,
                 page = 1,
-                type= PDFField.PDFFieldType.TextField
+                type = PDFField.PDFFieldType.TextField
             });
             list.Add(new PdfTextField()
             {
@@ -137,7 +143,7 @@ namespace DigitalSignatureService.Tests
                 page = 1,
                 thumbprint = "‎bc 97 b6 69 77 48 9c fb ca a0 78 58 38 19 c5 d6 1f 65 0c b8".Replace("‎", "").Replace(" ", "").ToUpper()
             });
-            PDFUtility.AddPDFFields(@"D:\temp\testSignatureService\BG.pdf", @"D:\temp\testSignatureService\BG_Out_text_signature.pdf", list);
+            return list;
         }
     }
 }

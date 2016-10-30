@@ -93,7 +93,9 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CertificateController.cs" />
     <Compile Include="Controllers\PdfFieldController.cs" />
+    <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Core\ContentManager.cs" />
+    <Compile Include="Core\Converter\PDFFieldConverter.cs" />
     <Compile Include="Core\DigitalSignatureFileStore.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

@@ -1,4 +1,6 @@
 ﻿using iTextSharp.text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +10,15 @@ namespace DigitalSignatureService.Models
 {
     public class DigitalSignatureTemplate
     {
-        public string id { get; set; } = new Guid().ToString();
-        public string name { get; set; }
+        public string id { get; set; }
+        public string name { get; set; } = "dummy_template";
         public string description { get; set; }
-        public List<PDFField> pdfFields { get; set; }
+        public DateTime create_date { get; set; } = DateTime.Now;
+        public string create_by { get; set; } = "shadow"; //placeholder (authorization not available yet)
+        public DateTime last_modify_date { get; set; }
+        public string last_modify_by { get; set; } = "shadow"; //placeholder
+        public List<PDFField> pdfFields { get; set; } = DateTime.Now;
+        public DigitalSignatureTemplate() { id = Guid.NewGuid().ToString(); }
     }
     public abstract class PDFField
     {
@@ -22,7 +29,8 @@ namespace DigitalSignatureService.Models
         public float width { get; set; } = 150;
         public float height { get; set; } = 300;
         public int page { get; set; } = 1;
-        public PDFFieldType type = PDFFieldType.TextField;
+        [JsonConverter(typeof(StringEnumConverter))]
+        public PDFFieldType type { get; set; } = PDFFieldType.TextField;
         //public PDFPageType pageType = PDFPageType.First;
         //public enum PDFPageType
         //{
