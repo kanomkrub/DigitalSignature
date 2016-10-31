@@ -18,33 +18,35 @@ namespace DigitalSignatureService.Controllers
             public string description;
             public List<PDFField> fields;
         }
+        [HttpPost]
         [ActionName("create")]
         public string Create([FromBody]DigitalSignatureTemplateRequest templateRequest)
         {
             var manager = ContentManager.GetInstance();
-            if (manager.GetTemplates().Any(t => t.name == templateRequest.name)) throw new AccessViolationException($"duplicate name of '{template.name}'.");
-            var template = new DigitalSignatureTemplate()
-            {
-                id = Guid.NewGuid().ToString(),
-                name = templateRequest.name,
-                description = templateRequest.description,
-                pdfFields = templateRequest.fields
-            };
-            manager.SaveTemplate(template);
-            return template.id;
+            return manager.CreateTemplate(templateRequest.name, templateRequest.description, templateRequest.fields);
         }
+        [HttpPost]
         [ActionName("update")]
         public string Update([FromBody]DigitalSignatureTemplateRequest templateRequest)
         {
             var manager = ContentManager.GetInstance();
-            var oldTemplate = manager.GetTemplate(templateRequest.id);
-            //oldTemplate.id = Guid.NewGuid().ToString();
-            oldTemplate.name = templateRequest.name;
-            oldTemplate.description = templateRequest.description;
-            oldTemplate.last_modify_date = DateTime.Now;
-            oldTemplate.pdfFields = templateRequest.fields;
-            manager.SaveTemplate(oldTemplate);
-            return oldTemplate.id;
+            return manager.UpdateTemplate(templateRequest.id, templateRequest.name, templateRequest.description, templateRequest.fields);
+        }
+        [HttpPost][HttpDelete]
+        [ActionName("delete")]
+        public void Delete([FromUri]string id)
+        {
+            var manager = ContentManager.GetInstance();
+            manager.DeleteTemplate(id);
+        }
+        [HttpPost][HttpGet]
+        [ActionName("get")]
+        public IEnumerable<DigitalSignatureTemplate> GetTemplates([FromUri]string id = null)
+        {
+            var manager = ContentManager.GetInstance();
+            var templates = manager.GetTemplates();
+            if (!string.IsNullOrEmpty(id)) templates = templates.Where(t => t.id == id);
+            return templates;
         }
     }
 }

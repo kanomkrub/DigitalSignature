@@ -11,7 +11,6 @@ using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace DigitalSignatureService.Core
 {
-
     public static class CertificateUtility
     {
         public  static void GetCertificateProperties(string thumbprint, out IList<X509Certificate> chain, out X509Certificate2 pk, out IOcspClient ocspClient, out ITSAClient tsaClient, out IList<ICrlClient> crlList)
@@ -70,7 +69,6 @@ namespace DigitalSignatureService.Core
                     version = certificate.Version
                 });
             }
-
             return certificatesList;
         }
 

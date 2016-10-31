@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DigitalSignatureService.Tests;
+using System.Net.Http;
 
 namespace DigitalSignatureService.Core.Tests
 {
@@ -25,7 +26,7 @@ namespace DigitalSignatureService.Core.Tests
             ids = contentManager.GetTemplateIds();
             if (ids.Contains(templateId1)) Assert.Fail("delete template fail");
         }
-
+        
         //[TestMethod()]
         //public void CreateTemplateTest2()
         //{

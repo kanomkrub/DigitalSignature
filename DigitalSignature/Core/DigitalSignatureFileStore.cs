@@ -7,34 +7,39 @@ using Newtonsoft.Json;
 using System.Text;
 using System.IO;
 using System.Collections.Specialized;
+using System.Configuration;
 
 namespace DigitalSignatureService.Core
 {
     public class TemplateFileStore : ContentManager
     {
-        private string templateRepository= Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+@"\TechSphere\DigitalSignature\Templates\";
+        private string templateRepository;
         private string encryptionKey;
         public TemplateFileStore()
         {
+            if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["templateStore"]))
+                templateRepository = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TechSphere\DigitalSignature\Templates";
+            else
+                templateRepository = ConfigurationManager.AppSettings["templateStore"];
             if (!Directory.Exists(templateRepository)) Directory.CreateDirectory(templateRepository);
         }
         public override void SaveTemplate(DigitalSignatureTemplate template)
         {
-            var path = $"{templateRepository}{template.id}.json";
+            var path = $"{templateRepository}\\{template.id}.json";
             var json = JsonConvert.SerializeObject(template);
             var bytes = Encoding.UTF8.GetBytes(json);
             File.WriteAllBytes(path, bytes);
         }
         public override void DeleteTemplate(string id)
         {
-            var path = $"{templateRepository}{id}.json";
+            var path = $"{templateRepository}\\{id}.json";
             if (File.Exists(path))
                 File.Delete(path);
         }
 
         public override DigitalSignatureTemplate GetTemplate(string id)
         {
-            var path = $"{templateRepository}{id}.json";
+            var path = $"{templateRepository}\\{id}.json";
             if (!File.Exists(path)) throw new KeyNotFoundException($"template {id} not found.");
             var content = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<DigitalSignatureTemplate>(content, new Converter.PDFFieldConverter());
