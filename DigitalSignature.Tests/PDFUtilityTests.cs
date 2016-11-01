@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using DigitalSignatureService.Models;
 using System.IO;
+using DigitalSignatureService.Controllers;
+using static DigitalSignatureService.Controllers.PdfFieldController;
 
 namespace DigitalSignatureService.Tests
 {
@@ -144,6 +146,18 @@ namespace DigitalSignatureService.Tests
                 thumbprint = "‎bc 97 b6 69 77 48 9c fb ca a0 78 58 38 19 c5 d6 1f 65 0c b8".Replace("‎", "").Replace(" ", "").ToUpper()
             });
             return list;
+        }
+        [TestMethod()]
+        public void AddTemplateFieldsTest()
+        {
+            var controller = new PdfFieldController();
+            var request = new AddFieldsRequest()
+            {
+                template_id = "79d53f5e-11cb-4431-82b9-d92fa06fa322",
+                path_in = @"D:\temp\testSignatureService\BG.pdf",
+                path_out = @"D:\temp\testSignatureService\BG_from_template.pdf"
+            };
+            controller.AddFields(request);
         }
     }
 }

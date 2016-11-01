@@ -16,6 +16,32 @@ namespace DigitalSignatureService.Core
 {
     public static class PDFUtility
     {
+        public static object GetPdfInfo(byte[] pdf)
+        {
+            using (var reader = new PdfReader(pdf))
+            {
+                var result = new
+                {
+                    page_count = reader.NumberOfPages,
+                    size = reader.FileLength, 
+                    info = reader.Info
+                };
+                return result;
+            }            
+        }
+        public static object GetPdfInfo(Stream pdf)
+        {
+            using (var reader = new PdfReader(pdf))
+            {
+                var result = new
+                {
+                    page_count = reader.NumberOfPages,
+                    size = reader.FileLength,
+                    info = reader.Info
+                };
+                return result;
+            }
+        }
         public static bool AddPDFFields(string pdfIn, string pdfOut, List<PDFField> pdfFields)
         {
             var bytesIn = File.ReadAllBytes(pdfIn);

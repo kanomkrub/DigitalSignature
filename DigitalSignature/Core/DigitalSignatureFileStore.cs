@@ -14,14 +14,22 @@ namespace DigitalSignatureService.Core
     public class TemplateFileStore : ContentManager
     {
         private string templateRepository;
+        private string templatePdfStore;
         private string encryptionKey;
         public TemplateFileStore()
         {
             if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["templateStore"]))
+            {
                 templateRepository = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TechSphere\DigitalSignature\Templates";
+                templatePdfStore = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TechSphere\DigitalSignature\Templates\pdf";
+            }
             else
+            {
                 templateRepository = ConfigurationManager.AppSettings["templateStore"];
+                templatePdfStore = ConfigurationManager.AppSettings["templateStore"] + @"\pdf";
+            }
             if (!Directory.Exists(templateRepository)) Directory.CreateDirectory(templateRepository);
+            if (!Directory.Exists(templatePdfStore)) Directory.CreateDirectory(templatePdfStore);
         }
         public override void SaveTemplate(DigitalSignatureTemplate template)
         {
@@ -61,5 +69,18 @@ namespace DigitalSignatureService.Core
                 yield return Path.GetFileNameWithoutExtension(file);
             }
         }
+
+        public override void SetExamplePdf(string template_id, byte[] content)
+        {
+            var path = $"{templatePdfStore}\\{template_id}.pdf";
+            File.WriteAllBytes(path, content);
+        }
+
+        public override byte[] GetExamplePdf(string template_id)
+        {
+            var path = $"{templatePdfStore}\\{template_id}.pdf";
+            var result = File.ReadAllBytes(path);
+            return result;
+        }
     }
-}
+}   

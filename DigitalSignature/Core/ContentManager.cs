@@ -38,5 +38,7 @@ namespace DigitalSignatureService.Core
         public abstract DigitalSignatureTemplate GetTemplate(string id);
         public abstract IEnumerable<DigitalSignatureTemplate> GetTemplates();
         public abstract IEnumerable<string> GetTemplateIds();
+        public abstract void SetExamplePdf(string template_id, byte[] content);
+        public abstract byte[] GetExamplePdf(string template_id);
     }
 }

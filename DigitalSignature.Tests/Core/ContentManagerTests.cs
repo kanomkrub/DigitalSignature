@@ -26,7 +26,7 @@ namespace DigitalSignatureService.Core.Tests
             ids = contentManager.GetTemplateIds();
             if (ids.Contains(templateId1)) Assert.Fail("delete template fail");
         }
-        
+
         //[TestMethod()]
         //public void CreateTemplateTest2()
         //{

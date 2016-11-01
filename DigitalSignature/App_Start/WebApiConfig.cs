@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 
 namespace DigitalSignatureService
@@ -13,6 +14,7 @@ namespace DigitalSignatureService
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{action}", new { action = RouteParameter.Optional });
 
+            config.Formatters.Add(new BsonMediaTypeFormatter());
 
             config.Formatters.JsonFormatter.SerializerSettings.Converters.Add
                 (new Core.Converter.PDFFieldConverter());

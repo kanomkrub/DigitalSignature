@@ -2,6 +2,8 @@
 using DigitalSignatureService.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -36,17 +38,50 @@ namespace DigitalSignatureService.Controllers
         [ActionName("delete")]
         public void Delete([FromUri]string id)
         {
-            var manager = ContentManager.GetInstance();
-            manager.DeleteTemplate(id);
+            ContentManager.GetInstance().DeleteTemplate(id);
         }
         [HttpPost][HttpGet]
         [ActionName("get")]
-        public IEnumerable<DigitalSignatureTemplate> GetTemplates([FromUri]string id = null)
+        public IEnumerable<DigitalSignatureTemplate> GetTemplates([FromUri]string id = null, [FromUri]string name = null)
         {
-            var manager = ContentManager.GetInstance();
-            var templates = manager.GetTemplates();
+            var templates = ContentManager.GetInstance().GetTemplates();
             if (!string.IsNullOrEmpty(id)) templates = templates.Where(t => t.id == id);
+            if (!string.IsNullOrEmpty(name)) templates = templates.Where(t => t.name == name);
             return templates;
+        }
+
+        [HttpPost]
+        [ActionName("setexamplepdf")]
+        public object SetExamplePdf(HttpRequestMessage request)
+        {
+            var template_id = request.GetQueryNameValuePairs().Single(t => t.Key == "template_id").Value;
+            var bytes = request.Content.ReadAsByteArrayAsync().Result;
+            var pdfInfo = PDFUtility.GetPdfInfo(bytes);
+            ContentManager.GetInstance().SetExamplePdf(template_id, bytes);
+            return pdfInfo;
+        }
+        [HttpGet][HttpPost]
+        [ActionName("getexamplepdf")]
+        public byte[] GetExamplePdf([FromUri]string template_id)
+        {
+            return ContentManager.GetInstance().GetExamplePdf(template_id);
+        }
+        [HttpGet][HttpPost]
+        [ActionName("getpdfinfo")]
+        public object GetPdfInfo(HttpRequestMessage request)
+        {
+            var bytes = request.Content.ReadAsByteArrayAsync().Result;
+            return PDFUtility.GetPdfInfo(bytes);
+        }
+        [HttpGet][HttpPost]
+        [ActionName("renderexamplepdf")]
+        public byte[] RenderPdf([FromUri]string template_id, [FromUri]int dpi = 360, [FromUri]int page = 1)
+        {
+            var pdfContent = ContentManager.GetInstance().GetExamplePdf(template_id);
+            var image = PdfRenderer.Render(pdfContent, dpi, page);
+            var stream = new MemoryStream();
+            image.Save(stream, ImageFormat.Jpeg);
+            return stream.ToArray();
         }
     }
 }
