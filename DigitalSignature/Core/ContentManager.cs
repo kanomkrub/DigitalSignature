@@ -18,7 +18,7 @@ namespace DigitalSignatureService.Core
         public string CreateTemplate(string name, string description, List<PDFField> pdfFields)
         {
             if (GetTemplates().Any(t => t.name == name)) throw new AccessViolationException($"duplicate name of '{name}'.");
-            var template = new DigitalSignatureTemplate() { name = name, description = description, pdfFields = pdfFields };
+            var template = new DigitalSignatureTemplate() { name = name, description = description, fields = pdfFields };
             SaveTemplate(template);
             return template.id;
         }
@@ -29,7 +29,7 @@ namespace DigitalSignatureService.Core
             oldTemplate.name = name;
             oldTemplate.description = description;
             oldTemplate.last_modify_date = DateTime.Now;
-            oldTemplate.pdfFields = pdfFields;
+            oldTemplate.fields = pdfFields;
             SaveTemplate(oldTemplate);
             return id;
         }

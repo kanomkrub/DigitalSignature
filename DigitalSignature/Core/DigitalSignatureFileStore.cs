@@ -28,8 +28,8 @@ namespace DigitalSignatureService.Core
                 templateRepository = ConfigurationManager.AppSettings["templateStore"];
                 templatePdfStore = ConfigurationManager.AppSettings["templateStore"] + @"\pdf";
             }
-            if (!Directory.Exists(templateRepository)) Directory.CreateDirectory(templateRepository);
-            if (!Directory.Exists(templatePdfStore)) Directory.CreateDirectory(templatePdfStore);
+            if (!Directory.Exists(templateRepository)) Directory.CreateDirectory($"{templateRepository}\\");
+            if (!Directory.Exists(templatePdfStore)) Directory.CreateDirectory($"{templatePdfStore}\\");
         }
         public override void SaveTemplate(DigitalSignatureTemplate template)
         {

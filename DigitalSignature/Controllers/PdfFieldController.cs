@@ -25,7 +25,7 @@ namespace DigitalSignatureService.Controllers
         {
             var fields = request.fields;
             if (!string.IsNullOrEmpty(request.template_id))
-                fields = ContentManager.GetInstance().GetTemplate(request.template_id).pdfFields;
+                fields = ContentManager.GetInstance().GetTemplate(request.template_id).fields;
             if (request.bytes != null)
                 return PDFUtility.AddPDFFields(request.bytes, fields);
             else

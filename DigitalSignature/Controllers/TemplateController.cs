@@ -54,7 +54,7 @@ namespace DigitalSignatureService.Controllers
         [ActionName("setexamplepdf")]
         public object SetExamplePdf(HttpRequestMessage request)
         {
-            var template_id = request.GetQueryNameValuePairs().Single(t => t.Key == "template_id").Value;
+            var template_id = request.GetQueryNameValuePairs().Single(t => t.Key == "id").Value;
             var bytes = request.Content.ReadAsByteArrayAsync().Result;
             var pdfInfo = PDFUtility.GetPdfInfo(bytes);
             ContentManager.GetInstance().SetExamplePdf(template_id, bytes);
@@ -62,9 +62,9 @@ namespace DigitalSignatureService.Controllers
         }
         [HttpGet][HttpPost]
         [ActionName("getexamplepdf")]
-        public byte[] GetExamplePdf([FromUri]string template_id)
+        public byte[] GetExamplePdf([FromUri]string id)
         {
-            return ContentManager.GetInstance().GetExamplePdf(template_id);
+            return ContentManager.GetInstance().GetExamplePdf(id);
         }
         [HttpGet][HttpPost]
         [ActionName("getpdfinfo")]
@@ -75,9 +75,9 @@ namespace DigitalSignatureService.Controllers
         }
         [HttpGet][HttpPost]
         [ActionName("renderexamplepdf")]
-        public byte[] RenderPdf([FromUri]string template_id, [FromUri]int dpi = 360, [FromUri]int page = 1)
+        public byte[] RenderPdf([FromUri]string id, [FromUri]int dpi = 360, [FromUri]int page = 1)
         {
-            var pdfContent = ContentManager.GetInstance().GetExamplePdf(template_id);
+            var pdfContent = ContentManager.GetInstance().GetExamplePdf(id);
             var image = PdfRenderer.Render(pdfContent, dpi, page);
             var stream = new MemoryStream();
             image.Save(stream, ImageFormat.Jpeg);

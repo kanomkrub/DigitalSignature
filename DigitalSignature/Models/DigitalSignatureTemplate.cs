@@ -17,7 +17,7 @@ namespace DigitalSignatureService.Models
         public string create_by { get; set; } = "shadow"; //placeholder (authorization not available yet)
         public DateTime last_modify_date { get; set; } = DateTime.Now;
         public string last_modify_by { get; set; } = "shadow"; //placeholder
-        public List<PDFField> pdfFields { get; set; }
+        public List<PDFField> fields { get; set; }
         public DigitalSignatureTemplate() { id = Guid.NewGuid().ToString(); }
     }
     public abstract class PDFField

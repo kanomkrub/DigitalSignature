@@ -35,7 +35,7 @@ namespace DigitalSignatureService.Core
 
         private static void GetPK(string thumbprint, out IList<X509Certificate> chain, out X509Certificate2 pk)
         {
-            var x509Store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            var x509Store = new X509Store( StoreName.My, StoreLocation.CurrentUser);
             x509Store.Open(OpenFlags.ReadOnly);
             var certificates = x509Store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, false);
             if (certificates.Count == 0) throw new KeyNotFoundException($"key {thumbprint} not found");
@@ -74,7 +74,8 @@ namespace DigitalSignatureService.Core
 
         public static List<object> GetCertificates(string thumbprint = "")
         {
-            var x509Store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            //fix store path => local machine>trusted root certificates
+            var x509Store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
             x509Store.Open(OpenFlags.ReadOnly);
             var certificates = x509Store.Certificates;
             if (!string.IsNullOrEmpty(thumbprint))
